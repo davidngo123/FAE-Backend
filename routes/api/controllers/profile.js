@@ -2,18 +2,18 @@ import express from 'express';
 var router = express.Router();
 router.get('/', async function(req, res, next) {
     try{  
-      let profileName = req.query.profile
-      console.log(username)
+      let profileName = req.query.user
+      console.log(profileName)
       let allProfiles
-      if(username == undefined){
+      if(profileName == undefined){
         allProfiles = await req.models.Profile.find()
       } else {
         allProfiles = await req.models.Profile.find({'name' : profileName})
       }
-      
+      console.log(allProfiles)
       let profiles = [];
       for (let i = 0; i < allProfiles.length; i++) {
-        allProfiles.push({
+        profiles.push({
                     "id" : allProfiles[i]._id,
                     "name" : allProfiles[i].name,
                     "role" : allProfiles[i].role,

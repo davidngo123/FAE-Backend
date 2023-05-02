@@ -5,7 +5,7 @@ let models = {};
 main().catch(err => console.log(err))
 async function main(){
     console.log('connecting to mongodb')
-    await mongoose.connect('mongodb+srv://dngo2:info441pass@cluster0.eihrtuv.mongodb.net/fae?retryWrites=true&w=majority')
+    await mongoose.connect('mongodb+srv://dngo2:info441pass@cluster0.eihrtuv.mongodb.net/fae2?retryWrites=true&w=majority')
 
     console.log('succesfully connected to mongodb!')
 
