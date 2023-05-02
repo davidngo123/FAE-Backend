@@ -3,14 +3,13 @@ var router = express.Router();
 router.get('/', async function(req, res, next) {
     try{  
       let profileName = req.query.user
-      console.log(profileName)
       let allProfiles
       if(profileName == undefined){
         allProfiles = await req.models.Profile.find()
       } else {
-        allProfiles = await req.models.Profile.find({'name' : profileName})
+        allProfiles = await req.models.Profile.find({'username' : profileName})
       }
-      console.log(allProfiles)
+
       let profiles = [];
 
       for (let i = 0; i < allProfiles.length; i++) {
