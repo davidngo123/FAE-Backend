@@ -42,11 +42,19 @@ router.post('/', async (req, res) => {
     try {
       const newPost = new req.models.Profile({
           username: req.body.username,
-          role: req.body.role,
-          tag: req.body.tags,
+          pronouns: req.body.pronouns,
+          bio: req.body.bio,
+          twitch : req.body.twitch,
+          youtube : req.body.youtube,
+          discord : req.body.discord,
+          twitter : req.body.twitter,
+          profilePic : req.body.profilePic,
+          email : req.body.email,
+          roles: req.body.roles,
+          tags: req.body.tags,
           salary: req.body.salary,
           events: req.body.events,
-          bio: req.body.bio
+          
       })
       
       await newPost.save()
