@@ -12,15 +12,24 @@ router.get('/', async function(req, res, next) {
       }
       console.log(allProfiles)
       let profiles = [];
+
       for (let i = 0; i < allProfiles.length; i++) {
         profiles.push({
                     "id" : allProfiles[i]._id,
-                    "name" : allProfiles[i].name,
-                    "role" : allProfiles[i].role,
+                    "name" : allProfiles[i].username,
+                    "bio" : allProfiles[i].bio,
+                    "pronouns" : allProfiles[i].pronouns,
+                    "twitch" : allProfiles[i].twitch,
+                    "youtube" : allProfiles[i].youtube,
+                    "discord" : allProfiles[i].discord,
+                    "twitter" : allProfiles[i].twitter,
+                    "profilePic" : allProfiles[i].profilePic,
+                    "email" : allProfiles[i].email,
                     "salary" : allProfiles[i].salary,
                     "tags" : allProfiles[i].tags,
                     "events" : allProfiles[i].events,
-                    "bio" : allProfiles[i].bio,
+                    "roles" : allProfiles[i].roles,
+                    
                 })
       }
       res.send(profiles)

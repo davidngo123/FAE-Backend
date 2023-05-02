@@ -18,12 +18,19 @@ async function main(){
     models.Directory = mongoose.model('Directory', directorySchema)
     const profileSchema = new mongoose.Schema({
         username: String,
-        role: String,
-        tag: [String],
-        salary: Number, 
+        bio: String,
+        pronouns: String,
+        email: String,
+        salary: String,
+        twitch: String,
+        youtube: String,
+        discord: String,
+        twitter: String,
+        profilePic: String,
         events: [String],
         portfolio_images: [String],
-        bio: String
+        roles: [String],
+        tags: [String]
         
     })
     models.Profile = mongoose.model('Profile', profileSchema)
