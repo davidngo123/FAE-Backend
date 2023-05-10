@@ -24,7 +24,7 @@ router.get('/', async function(req, res, next) {
                     "twitter" : allProfiles[i].twitter,
                     "profilePic" : allProfiles[i].profilePic,
                     "email" : allProfiles[i].email,
-                    "salary" : allProfiles[i].salary,
+                    "payrate" : allProfiles[i].salary,
                     "tags" : allProfiles[i].tags,
                     "events" : allProfiles[i].events,
                     "roles" : allProfiles[i].roles,
