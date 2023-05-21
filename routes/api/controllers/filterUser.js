@@ -11,7 +11,7 @@ router.post('/', async (req, res) => {
         let formData = req.body
 
         const { subcategories } = formData
-        console.log(subcategories)
+
 
         const users = await req.models.Profile.find({
             roles: { $in: subcategories }
