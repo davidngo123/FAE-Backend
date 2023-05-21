@@ -7,17 +7,29 @@ router.get('/', (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        console.log('received request')
         let formData = req.body
 
-        const { subcategories } = formData
+        const { subcategories, game, location, siteType, salary, experience } = formData
+
+        const query = {
+            roles: { $in: subcategories },
+            siteType: { $in: siteType },
+            "salary.currency": { $regex: salary.currency, "$options": "i" },
+            "salary.compensationType": salary.compensationType,
+            "salary.amount": { $gte: salary.min, $lte: salary.max === -1 ? Number.MAX_SAFE_INTEGER : salary.max },
+            experience: { $in: experience }
+        }
 
 
-        const users = await req.models.Profile.find({
-            roles: { $in: subcategories }
-        })
+        if (game !== '') {
+            query.game = { $regex: game, "$options": "i" }
+        }
 
+        if (location !== '') {
+            query.region = { $regex: location, "$options": "i" }
+        }
 
+        const users = await req.models.Profile.find(query)
 
         res.send({ status: 'success', payload: JSON.stringify(users) })
     } catch (error) {
@@ -25,37 +37,24 @@ router.post('/', async (req, res) => {
     }
 })
 
+router.get('/search', async (req, res) => {
+    try {
+        console.log('filter search called')
+        const { category, value } = req.query
+        const result = await req.models.Profile.find((() => {
+            switch (category) {
+                case 'role':
+                    return { roles: { $in: [value] } }
+                case 'name':
+                    return { username: { $regex: value, "$options": "i" } }
+                case 'tags':
+                    return { tags: { $in: [value] } }
+            }
+        })())
+        res.status(200).send({ status: 'success', payload: result })
+    } catch (error) {
+        res.status(500).send({ status: 'error', error: error })
+    }
+})
+
 export default router
-
-
-// if (profileName == undefined) {
-        //     allProfiles = await req.models.Profile.find()
-        // } else {
-        //     allProfiles = await req.models.Profile.find({ 'username': profileName })
-        // }
-
-        // let profiles = [];
-
-        // for (let i = 0; i < allProfiles.length; i++) {
-        //     profiles.push({
-        //         "id": allProfiles[i]._id,
-        //         "name": allProfiles[i].username,
-        //         "bio": allProfiles[i].bio,
-        //         "pronouns": allProfiles[i].pronouns,
-        //         "twitch": allProfiles[i].twitch,
-        //         "youtube": allProfiles[i].youtube,
-        //         "discord": allProfiles[i].discord,
-        //         "twitter": allProfiles[i].twitter,
-        //         "profilePic": allProfiles[i].profilePic,
-        //         "email": allProfiles[i].email,
-        //         "salary": { ...allProfiles[i].salary },
-        //         "game": allProfiles[i].game,
-        //         "region": allProfiles[i].region,
-        //         "experience": allProfiles[i].experience,
-        //         "siteType": allProfiles[i].siteType,
-        //         "tags": allProfiles[i].tags,
-        //         "events": allProfiles[i].events,
-        //         "roles": allProfiles[i].roles,
-
-        //     })
-        // }
