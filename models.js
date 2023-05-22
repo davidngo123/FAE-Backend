@@ -29,7 +29,7 @@ async function main() {
         game: String,
         region: String,
         salary: {
-            amount: String,
+            amount: Number,
             currency: String,
             compensationType: String
         },
