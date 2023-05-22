@@ -9,7 +9,7 @@ router.post('/', async (req, res) => {
     try {
         let formData = req.body
 
-        const { subcategories, game, location, siteType, salary, experience } = formData
+        const { subcategories, game, location, siteType, salary, experience, pageNumber, itemsPerPage } = formData
 
         const query = {
             roles: { $in: subcategories },
@@ -29,9 +29,10 @@ router.post('/', async (req, res) => {
             query.region = { $regex: location, "$options": "i" }
         }
 
-        const users = await req.models.Profile.find(query)
+        const dataLength = await req.models.Profile.find(query).count()
+        const users = await req.models.Profile.find(query).skip((pageNumber - 1) * itemsPerPage).limit(itemsPerPage)
 
-        res.send({ status: 'success', payload: JSON.stringify(users) })
+        res.send({ status: 'success', payload: JSON.stringify(users), dataLength: dataLength })
     } catch (error) {
         res.status(500).json({ "status": "error", "error": error })
     }
@@ -39,8 +40,8 @@ router.post('/', async (req, res) => {
 
 router.get('/search', async (req, res) => {
     try {
-        console.log('filter search called')
         const { category, value } = req.query
+
         const result = await req.models.Profile.find((() => {
             switch (category) {
                 case 'role':
