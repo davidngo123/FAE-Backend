@@ -29,5 +29,19 @@ app.use((req, res, next) => {
 })
 
 app.use('/api/', apiRouter);
+app.use('/', (req, res) => {
+
+    try {
+        res.status(200).send({
+            status: 'success',
+            payload: 'health check'
+        })
+    } catch (error) {
+        req.status(500).send({
+            status: 'error',
+            payload: 'healthcheck'
+        })
+    }
+})
 
 export default app;
