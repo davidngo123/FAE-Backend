@@ -41,7 +41,7 @@ router.get('/count', async (req, res) => {
         performanceCount.count = await req.models.Profile.find({ roles: { $in: ['coaching', 'health', 'nutrition', 'psychology', 'team manager'] } }).count()
         tournamentEventsCount.count = await req.models.Profile.find({ roles: { $in: ['event organizer', 'facilities management', 'tournament admin', 'tournament organizer'] } }).count()
 
-        res.status(200).send({
+        res.status(200).json({
             status: 'success', payload: JSON.stringify({
                 "broadcasting": broadcastingCount,
                 "business operations": businessOperationsCount,
@@ -77,6 +77,15 @@ router.post('/', async (req, res) => {
 
     // res.status(401).json({"status": "error", "error": "not logged in"})
 
+})
+
+router.get('/sanity-check', (req, res) => {
+    res.status(200).send({
+        status: "success",
+        payload: {
+            message: "If sanity check works, that means mongodb only connects on localhost and not on cyclic"
+        }
+    })
 })
 
 export default router;
