@@ -32,6 +32,8 @@ router.post('/', async (req, res) => {
         const dataLength = await req.models.Profile.find(query).count()
         const users = await req.models.Profile.find(query).skip((pageNumber - 1) * itemsPerPage).limit(itemsPerPage)
 
+        console.log(users, dataLength)
+
         res.send({ status: 'success', payload: JSON.stringify(users), dataLength: dataLength })
     } catch (error) {
         res.status(500).json({ "status": "error", "error": error })

@@ -34,7 +34,7 @@ app.use('/', (req, res) => {
     try {
         res.status(200).send({
             status: 'success',
-            payload: 'health check'
+            payload: { status: 'health check' }
         })
     } catch (error) {
         req.status(500).send({
