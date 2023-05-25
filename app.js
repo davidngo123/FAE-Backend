@@ -32,12 +32,12 @@ app.use('/api/', apiRouter);
 app.use('/', (req, res) => {
 
     try {
-        res.status(200).send({
+        res.status(200).json({
             status: 'success',
             payload: { status: 'health check' }
         })
     } catch (error) {
-        req.status(500).send({
+        req.status(500).json({
             status: 'error',
             payload: 'healthcheck'
         })
