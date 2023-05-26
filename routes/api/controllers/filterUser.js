@@ -32,8 +32,6 @@ router.post('/', async (req, res) => {
         const dataLength = await req.models.Profile.find(query).count()
         const users = await req.models.Profile.find(query).skip((pageNumber - 1) * itemsPerPage).limit(itemsPerPage)
 
-        console.log(users, dataLength)
-
         res.send({ status: 'success', payload: JSON.stringify(users), dataLength: dataLength })
     } catch (error) {
         res.status(500).json({ "status": "error", "error": error })
@@ -43,6 +41,17 @@ router.post('/', async (req, res) => {
 router.get('/search', async (req, res) => {
     try {
         const { category, value } = req.query
+
+        const dataLength = await req.models.Profile.find((() => {
+            switch (category) {
+                case 'role':
+                    return { roles: { $in: [value] } }
+                case 'name':
+                    return { username: { $regex: value, "$options": "i" } }
+                case 'tags':
+                    return { tags: { $in: [value] } }
+            }
+        })()).count()
 
         const result = await req.models.Profile.find((() => {
             switch (category) {
@@ -54,7 +63,7 @@ router.get('/search', async (req, res) => {
                     return { tags: { $in: [value] } }
             }
         })())
-        res.status(200).send({ status: 'success', payload: result })
+        res.status(200).send({ status: 'success', payload: result, dataLength: dataLength })
     } catch (error) {
         res.status(500).send({ status: 'error', error: error })
     }
