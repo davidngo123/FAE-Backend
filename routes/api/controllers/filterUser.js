@@ -42,6 +42,17 @@ router.get('/search', async (req, res) => {
     try {
         const { category, value } = req.query
 
+        const dataLength = await req.models.Profile.find((() => {
+            switch (category) {
+                case 'role':
+                    return { roles: { $in: [value] } }
+                case 'name':
+                    return { username: { $regex: value, "$options": "i" } }
+                case 'tags':
+                    return { tags: { $in: [value] } }
+            }
+        })()).count()
+
         const result = await req.models.Profile.find((() => {
             switch (category) {
                 case 'role':
@@ -52,7 +63,7 @@ router.get('/search', async (req, res) => {
                     return { tags: { $in: [value] } }
             }
         })())
-        res.status(200).send({ status: 'success', payload: result })
+        res.status(200).send({ status: 'success', payload: result, dataLength: dataLength })
     } catch (error) {
         res.status(500).send({ status: 'error', error: error })
     }
