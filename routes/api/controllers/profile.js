@@ -3,12 +3,12 @@ var router = express.Router();
 
 router.get('/', async function (req, res, next) {
     try {
-        let profileName = req.query.user
+        let userId = req.query.id;
         let allProfiles
-        if (profileName == undefined) {
+        if (userId == undefined) {
             allProfiles = await req.models.Profile.find()
         } else {
-            allProfiles = await req.models.Profile.find({ 'username': profileName })
+            allProfiles = await req.models.Profile.find({ '_id': userId })
         }
 
         let profiles = [];
@@ -33,6 +33,14 @@ router.get('/', async function (req, res, next) {
                 "tags": allProfiles[i].tags,
                 "events": allProfiles[i].events,
                 "roles": allProfiles[i].roles,
+
+                // Added on my own
+                "showcase": allProfiles[i].showcase, 
+                "design": allProfiles[i].design,
+                "articles": allProfiles[i].articles,
+                "observer": allProfiles[i].observer,
+                "editing": allProfiles[i].editing,
+                "casting": allProfiles[i].casting,
 
             })
         }
@@ -59,18 +67,22 @@ router.post('/', async (req, res) => {
             tags: req.body.tags,
             game: req.body.game,
             region: req.body.region,
-            salary: {
-                amount: req.body.amount,
-                currency: req.body.currency,
-                compensationType: req.body.compensationType
-            },
+            salary: req.body.salary,
             experience: req.body.experience,
             siteType: req.body.siteType,
             events: req.body.events,
+
+            // Added on my own
+            showcase: req.body.showcase, 
+            design: req.body.design,
+            articles: req.body.articles,
+            observer: req.body.observer,
+            editing: req.body.editing,
+            casting: req.body.casting,
         })
 
         await newPost.save()
-        console.log('sucess')
+        console.log('success')
         res.json({ "status": "success" })
 
     } catch (error) {

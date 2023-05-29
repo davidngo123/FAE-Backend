@@ -16,16 +16,17 @@ async function main() {
 
     models.Directory = mongoose.model('Directory', directorySchema)
     const profileSchema = new mongoose.Schema({
+        _id: String,
         username: String,
         bio: String,
-        pronouns: String,
+        pronouns: [String],
         email: String,
         twitch: String,
         youtube: String,
         discord: String,
         twitter: String,
         profilePic: String,
-        //
+        
         game: String,
         region: String,
         salary: {
@@ -35,11 +36,18 @@ async function main() {
         },
         experience: String,
         siteType: String,
-        //
-        events: [String],
+        
+        events: [Object],
         portfolio_images: [String],
         roles: [String],
-        tags: [String]
+        tags: [String],
+
+        showcase: [String],
+        design: [String],
+        articles: [Object],
+        observer: String,
+        editing: String,
+        casting: String,
 
     })
     models.Profile = mongoose.model('Profile', profileSchema)
