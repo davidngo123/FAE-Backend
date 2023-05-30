@@ -35,7 +35,7 @@ router.get('/', async function (req, res, next) {
                 "roles": allProfiles[i].roles,
 
                 // Added on my own
-                "showcase": allProfiles[i].showcase, 
+                "showcase": allProfiles[i].showcase,
                 "design": allProfiles[i].design,
                 "articles": allProfiles[i].articles,
                 "observer": allProfiles[i].observer,
@@ -53,7 +53,8 @@ router.get('/', async function (req, res, next) {
 
 router.post('/', async (req, res) => {
     try {
-        const newPost = new req.models.Profile({
+        const userId = req.body.id;
+        const profileReqObj = {
             username: req.body.username,
             pronouns: req.body.pronouns,
             bio: req.body.bio,
@@ -73,17 +74,22 @@ router.post('/', async (req, res) => {
             events: req.body.events,
 
             // Added on my own
-            showcase: req.body.showcase, 
+            showcase: req.body.showcase,
             design: req.body.design,
             articles: req.body.articles,
             observer: req.body.observer,
             editing: req.body.editing,
             casting: req.body.casting,
-        })
-
-        await newPost.save()
-        console.log('success')
-        res.json({ "status": "success" })
+        };
+        const profile = await req.models.Profile.findOne({ _id: userId });
+        if (profile) {
+            profile.set(profileReqObj);
+            await profile.save();
+            res.json({ status: "success" });
+        } else {
+            // Handle the case when the profile is not found
+            res.status(404).json({ status: "error", error: "Profile not found" });
+        }
 
     } catch (error) {
         console.log("Error saving post: ", error)
