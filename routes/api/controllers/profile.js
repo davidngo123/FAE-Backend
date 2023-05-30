@@ -3,12 +3,12 @@ var router = express.Router();
 
 router.get('/', async function (req, res, next) {
     try {
-        let profileName = req.query.user
+        let userId = req.query.id;
         let allProfiles
-        if (profileName == undefined) {
+        if (userId == undefined) {
             allProfiles = await req.models.Profile.find()
         } else {
-            allProfiles = await req.models.Profile.find({ 'username': profileName })
+            allProfiles = await req.models.Profile.find({ '_id': userId })
         }
 
         let profiles = [];
@@ -34,6 +34,14 @@ router.get('/', async function (req, res, next) {
                 "events": allProfiles[i].events,
                 "roles": allProfiles[i].roles,
 
+                // Added on my own
+                "showcase": allProfiles[i].showcase,
+                "design": allProfiles[i].design,
+                "articles": allProfiles[i].articles,
+                "observer": allProfiles[i].observer,
+                "editing": allProfiles[i].editing,
+                "casting": allProfiles[i].casting,
+
             })
         }
         res.send(profiles)
@@ -45,8 +53,9 @@ router.get('/', async function (req, res, next) {
 
 router.post('/', async (req, res) => {
     try {
-        const newPost = new req.models.Profile({
-            username: req.body.username,
+        const userId = req.body.id;
+        const profileReqObj = {
+            username: req.body.name,
             pronouns: req.body.pronouns,
             bio: req.body.bio,
             twitch: req.body.twitch,
@@ -59,19 +68,28 @@ router.post('/', async (req, res) => {
             tags: req.body.tags,
             game: req.body.game,
             region: req.body.region,
-            salary: {
-                amount: req.body.amount,
-                currency: req.body.currency,
-                compensationType: req.body.compensationType
-            },
+            salary: req.body.salary,
             experience: req.body.experience,
             siteType: req.body.siteType,
             events: req.body.events,
-        })
 
-        await newPost.save()
-        console.log('sucess')
-        res.json({ "status": "success" })
+            // Added on my own
+            showcase: req.body.showcase,
+            design: req.body.design,
+            articles: req.body.articles,
+            observer: req.body.observer,
+            editing: req.body.editing,
+            casting: req.body.casting,
+        };
+        const profile = await req.models.Profile.findOne({ _id: userId });
+        if (profile) {
+            profile.set(profileReqObj);
+            await profile.save();
+            res.json({ status: "success" });
+        } else {
+            // Handle the case when the profile is not found
+            res.status(404).json({ status: "error", error: "Profile not found" });
+        }
 
     } catch (error) {
         console.log("Error saving post: ", error)
