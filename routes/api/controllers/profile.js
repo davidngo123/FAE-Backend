@@ -55,7 +55,7 @@ router.post('/', async (req, res) => {
     try {
         const userId = req.body.id;
         const profileReqObj = {
-            username: req.body.username,
+            username: req.body.name,
             pronouns: req.body.pronouns,
             bio: req.body.bio,
             twitch: req.body.twitch,
